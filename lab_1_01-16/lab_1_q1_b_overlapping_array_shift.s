@@ -2,7 +2,7 @@
 	EXPORT __Vectors
 
 __Vectors
-	DCD 0X10001010
+	DCD 0x10001010
 	DCD Reset_Handler
 	ALIGN
 	
