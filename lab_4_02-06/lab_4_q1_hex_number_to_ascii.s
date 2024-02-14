@@ -25,7 +25,7 @@ Reset_Handler
 
 CONVERT
     BL EXTRACT_DIGITS_INIT
-    CMP R0, #0x0            ; end if dividend is zero
+    CMP R0, #0x0             ; end if dividend is zero
     BNE CONVERT
 
 

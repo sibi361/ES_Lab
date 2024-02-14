@@ -22,7 +22,7 @@ __Vectors
 Reset_Handler
     LDR R0, =HEX
     LDR R0, [R0]
-    MOV R1, #0x20          ; initialise (final) shift counter to 32
+    MOV R1, #0x20           ; initialise (final) shift counter to 32
 
 
 CONVERT
@@ -50,14 +50,14 @@ DIVIDE
     BLO PACK_DIGIT
     
     SUB R0, #0x0A           ; if dividend is exceeds 10 decrement it by 10
-    ADD R2, #0x1             ; and increment quotient by 1
-    B DIVIDE                    ; until dividend is less than 10
+    ADD R2, #0x1            ; and increment quotient by 1
+    B DIVIDE                ; until dividend is less than 10
 
 
 PACK_DIGIT
     ORR R3, R0
     ROR R3, #0x4
-    MOV R0, R2                ; quotient becomes new dividend
+    MOV R0, R2              ; quotient becomes new dividend
     
     SUB R1, #0x4
     BX LR
@@ -66,7 +66,7 @@ PACK_DIGIT
 HEX DCD 0x2E
 
     AREA DATASEG, DATA, READWRITE
-BCD DCD 0                  ; DST location in Data segment
+BCD DCD 0                   ; DST location in Data segment
 
 
     END
