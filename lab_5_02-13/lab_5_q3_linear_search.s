@@ -17,7 +17,7 @@ __Vectors
 ; R2 search key
 ; R3 result index stored in RAM
 ; R3 will be set to (-1)10 i.e. 0xFFFFFFFF if key is NOT found 
-
+; R4 current idx
 
 Reset_Handler
     LDR R0, =ARR
@@ -57,9 +57,9 @@ NOT_FOUND
     B STORE_IN_RAM
 
 
-ARR DCD 100, 64, -45, 40, 55
-ARR_LEN DCD 5
-KEY DCD -45
+ARR DCD 100, 64, -45, 40, 99, 12, -10, 0, 24, 24
+ARR_LEN DCD 10
+KEY DCD 99
 
     AREA DATASEG, DATA, READWRITE
 RESULT DCD 0

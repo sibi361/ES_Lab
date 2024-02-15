@@ -7,7 +7,7 @@ __Vectors
     
     ALIGN
     
-    AREA lab_5_q1_insertion_sort_improved, CODE, READONLY
+    AREA lab_5_q1_selection_sort_improved, CODE, READONLY
     ENTRY
     EXPORT Reset_Handler
 

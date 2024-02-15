@@ -23,13 +23,13 @@ Reset_Handler
     LDR R2, =RESULT
 
 
-    MOV R1, #1                ; set result as 1
+    MOV R1, #0x1                ; set result as 1
     
     BL FACTORIAL
 
 
 STORE_IN_RAM
-    STR R1, [R2]              ; this address gets pushed onto stack on first run of PUSHGT {LR, R0}
+    STR R1, [R2]              ; this instruction's address gets pushed onto stack on first run of PUSHGT {LR, R0}
 
 
 STOP
