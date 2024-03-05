@@ -8,3 +8,7 @@
 
 lab_0*
 
+!**/*.c
+system_LPC17xx.c
+startup_LPC17xx.s
+
