@@ -1,22 +1,26 @@
 #include <LPC17xx.h>
 
+#define DELAY 1			// seconds
+#define REFRESH_RATE 50 // hertz
+
 #define COUNT_DIGITS 4
 
-unsigned int SEVEN_SEG_DECODER_CODES[4] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
-unsigned int SEVEN_SEG_DATA_CODES[10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
+unsigned int SEVEN_SEG_DECODER_CODES[] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
+unsigned int SEVEN_SEG_DATA_CODES[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F,
+									   0x77, 0x7C, 0x58, 0x5E, 0x79, 0x71};
 
-unsigned int i, j, k;
-unsigned int digit_array[4] = {0};
+unsigned int i, j, k, mr;
+unsigned int digit_array[4];
 int counter;
 
 void split_num_into_digit_array_reversed(unsigned int input)
 {
-	// e.g. 9876 becomes {6, 7, 8, 9}
+	// e.g. 253 becomes {13, 15, 0, 0}
 
 	for (i = 0; i < COUNT_DIGITS; i++)
 	{
-		digit_array[i] = input % 10;
-		input /= 10;
+		digit_array[i] = input % 16;
+		input /= 16;
 	}
 }
 
@@ -26,17 +30,17 @@ void delay()
 	LPC_TIM0->EMR = 0x20; // Set EM0 to 1 on match event
 	LPC_TIM0->MCR = 0x4;  // Stop PC and TC on match event
 
-	LPC_TIM0->PR = 149;
-	LPC_TIM0->MR0 = 99; // 50 * 4 * (149 + 1) * (99 + 1) / (3 * 10 ^ 6) = 1 second
+	LPC_TIM0->PR = 0x0;
+	LPC_TIM0->MR0 = mr;
 
 	LPC_TIM0->TCR = 0x1;		   // ENABLE and clear RESET flag
-	while (!(LPC_TIM0->EMR & 0x1)) // wait until EM0 bit is 1
+	while (!(LPC_TIM0->EMR & 0x1)) // wait for match event i.e. until EM0 (bit 0) is 1
 		;
 }
 
 void display()
 {
-	for (j = 0; j < 50; j++) // refresh rate: 50 Hz
+	for (j = 0; j < REFRESH_RATE * DELAY; j++) // timer is set to count only one second, hence multiply by delay
 	{
 		for (k = 0; k < COUNT_DIGITS; k++)
 		{
@@ -60,6 +64,11 @@ int main()
 	LPC_GPIO1->FIODIRH |= 0xF << 7; // Set P1.26 - P1.23 as output for seven segement decoder selection lines
 	LPC_GPIO0->FIODIRH |= 0x0 << 5; // Set P0.21 (7nth pin in CNC) as input for SW2
 
+	// REFRESH_RATE * COUNT_DIGITS * (PR + 1) * (MR + 1) / (3 * 10 ^ 6) = 1 second
+	// => (MR + 1) = (3 * 10 ^ 6) / [(PR + 1) * COUNT_DIGITS * REFRESH_RATE]
+	// => (MR + 1) = (3 * 10 ^ 6) / [(0 + 1) * 4 * REFRESH_RATE]
+	mr = 3000000 / (COUNT_DIGITS * REFRESH_RATE) - 1;
+
 	counter = -1;
 
 	while (1)
@@ -68,10 +77,11 @@ int main()
 			? counter--	 // Down counter if SW2 is pressed
 			: counter++; // Else up counter
 
-		counter = counter >= 10000
+		// try w/o this AAAAAAAAAAAAAAAA
+		counter = counter >= 65536
 					  ? 0
 				  : counter < 0
-					  ? 9999
+					  ? 65535
 					  : counter;
 
 		split_num_into_digit_array_reversed(counter);

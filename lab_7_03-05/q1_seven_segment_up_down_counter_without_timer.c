@@ -25,7 +25,7 @@ void split_num_into_digit_array_reversed(unsigned int input)
 	}
 }
 
-void display_on_display(unsigned int runs)
+void display(unsigned int runs)
 {
 	for (k = 0; k < runs; k++)
 	{
@@ -63,14 +63,14 @@ int main(void)
 		{
 			counter = 0;
 		}
-		else if (counter <= 0)
+		else if (counter < 0)
 		{
 			counter = 9999;
 		}
 
 		split_num_into_digit_array_reversed(counter);
 
-		display_on_display(40);
+		display(40);
 	}
 
 	return 0;
