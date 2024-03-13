@@ -8,7 +8,7 @@
 
 #define COUNT_DIGITS 4
 
-unsigned int SEVEN_SEG_DECODER_CODES[] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
+unsigned long int SEVEN_SEG_DECODER_CODES[] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
 unsigned int SEVEN_SEG_DATA_CODES[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
 
 unsigned int i, j, k, mr, hour, minute, concat;
@@ -39,9 +39,9 @@ void delay()
 		;
 }
 
-void display()
+void display(float delay_seconds)
 {
-	for (j = 0; j < REFRESH_RATE * DELAY; j++) // timer is set to count only one second, hence multiply by delay
+	for (j = 0; j < REFRESH_RATE * delay_seconds; j++) // timer is set to count only one second, hence multiply by delay
 	{
 		for (k = 0; k < COUNT_DIGITS; k++)
 		{
@@ -79,9 +79,7 @@ int main()
 
 	while (1)
 	{
-		minute += !(LPC_GPIO0->FIOPIN & 1 << 21)
-					  ? 10 // fast forward clock on SW2 press
-					  : 1;
+		minute += 1;
 
 		if (minute > 59)
 		{
@@ -98,7 +96,7 @@ int main()
 
 		split_num_into_digit_array_reversed(concat);
 
-		display();
+		display(DELAY);
 	}
 
 	return 0;

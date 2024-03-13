@@ -1,7 +1,7 @@
 #include <LPC17xx.h>
 
 unsigned int COUNT_DIGITS = 4;
-unsigned int SEVEN_SEG_DECODER_CODES[4] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
+unsigned long int SEVEN_SEG_DECODER_CODES[4] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
 unsigned int SEVEN_SEG_DATA_CODES[10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
 
 unsigned int i, j, k, m;

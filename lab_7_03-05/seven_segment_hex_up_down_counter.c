@@ -5,7 +5,7 @@
 
 #define COUNT_DIGITS 4
 
-unsigned int SEVEN_SEG_DECODER_CODES[] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
+unsigned long int SEVEN_SEG_DECODER_CODES[] = {0xF87FFFFF, 0xF8FFFFFF, 0xF97FFFFF, 0xF9FFFFFF};
 unsigned int SEVEN_SEG_DATA_CODES[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F,
 									   0x77, 0x7C, 0x58, 0x5E, 0x79, 0x71};
 
@@ -77,7 +77,6 @@ int main()
 			? counter--	 // Down counter if SW2 is pressed
 			: counter++; // Else up counter
 
-		// try w/o this AAAAAAAAAAAAAAAA
 		counter = counter >= 65536
 					  ? 0
 				  : counter < 0

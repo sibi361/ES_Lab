@@ -1,9 +1,9 @@
 #include <LPC17xx.h>
 
-#define DELAY 1			// seconds
+#define DELAY 0.2		// seconds
 #define REFRESH_RATE 50 // hertz
 
-unsigned int SEVEN_SEG_DATA_CODES[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D};
+unsigned int SEVEN_SEG_DATA_CODES[8] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D};
 
 unsigned int i, mr, die;
 
@@ -21,11 +21,11 @@ void delay()
 		;
 }
 
-void display()
+void display(unsigned int num)
 {
 	for (i = 0; i < REFRESH_RATE * DELAY; i++) // timer is set to count only one second, hence multiply by delay
 	{
-		LPC_GPIO0->FIOPIN = SEVEN_SEG_DATA_CODES[die] << 4;
+		LPC_GPIO0->FIOPIN = SEVEN_SEG_DATA_CODES[num] << 4;
 		delay();
 	}
 }
@@ -40,7 +40,10 @@ int main()
 	LPC_PINCON->PINSEL5 = 0x0; // Set P2.31 - P2.16 to GPIO
 
 	LPC_GPIO0->FIODIR |= 0xFF << 4; // Set P0.11 - P0.4 as output for seven segment data lines
+	LPC_GPIO1->FIODIRH |= 0xF << 7; // Set P1.26 - P1.23 as output for seven segement decoder selection lines
 	LPC_GPIO0->FIODIRH |= 0x0 << 5; // Set P0.21 (7nth pin in CNC) as input for SW2
+
+	LPC_GPIO1->FIOPIN = 0xF87FFFFF;
 
 	// REFRESH_RATE * (PR + 1) * (MR + 1) / (3 * 10 ^ 6) = 1 second
 	// => (MR + 1) = (3 * 10 ^ 6) / [(PR + 1) * REFRESH_RATE]
@@ -56,7 +59,7 @@ int main()
 			die = rand() % 6 + 1;
 		}
 
-		display();
+		display(die);
 	}
 
 	return 0;
