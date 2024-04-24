@@ -3,7 +3,7 @@
 
 #define LCD_INIT_DELAY 10000
 
-#define REFERENCE_VOLTAGE 3.300
+#define REFERENCE_VOLTAGE 3.3
 #define FULL_SCALE 0xFFF // 12 bit ADC
 
 // LCD connected to CNC
@@ -21,8 +21,8 @@ void delay(unsigned int);
 unsigned int temp, temp1, temp2, adc_4_reading, adc_5_reading;
 float digital_diff, analog_diff;
 
-unsigned char lcd_line_1[110] = "ADC CH4 - CH5";
-unsigned char lcd_line_2[100] = "Difference Calc";
+unsigned char lcd_line_1[20] = "ADC CH4 - CH5";
+unsigned char lcd_line_2[20] = "Difference Calc";
 
 void ADC_IRQHandler(void)
 {
@@ -160,9 +160,9 @@ void clear_ports(void)
 void lcd_puts(unsigned char *buffer)
 {
 	unsigned int i;
-	while (buffer[i] != '\0' && i++ < 16)
+	while (buffer[i] != '\0' && i < 16)
 	{
-		temp1 = buffer[i];
+		temp1 = buffer[i++];
 		lcd_write(1);
 	}
 	return;

@@ -8,11 +8,11 @@ Intensity Level      Key Pressed
 	100%                3
 */
 
-#define MAX_BRIGHTNESS_MR 30000
-#define WAIT_DELAY_1_MS_TC 300000
+#define BRIGHTNESS_MR_STEP 30000
+#define WAIT_DELAY_1_MS_TC 3000
 
 void init_pwm(void);
-void update_width(unsigned int pulsewidth);
+void update_width(unsigned int);
 void delay_1_ms(void);
 unsigned int scan_matrix_keyboard(void);
 
@@ -38,13 +38,13 @@ int main(void)
 			update_width(0);
 			break;
 		case 0x2:
-			update_width(MAX_BRIGHTNESS_MR);
+			update_width(BRIGHTNESS_MR_STEP);
 			break;
 		case 0x4:
-			update_width(MAX_BRIGHTNESS_MR * 2);
+			update_width(BRIGHTNESS_MR_STEP * 2);
 			break;
 		case 0x8:
-			update_width(MAX_BRIGHTNESS_MR * 3);
+			update_width(BRIGHTNESS_MR_STEP * 3);
 			break;
 		}
 
@@ -54,14 +54,14 @@ int main(void)
 
 void init_pwm(void)
 {
-	// configure the only PWM pin available on board P1.23 PWM1.4
+	// configure the only PWM pin available on board P1.23 as PWM1.4 (CNB -> LED)
 	LPC_PINCON->PINSEL3 = 2 << 14; // function 2
 
 	LPC_PWM1->TCR = 1 << 1;	 // stop timer and reset both TC and PC
-	LPC_PWM1->PCR = 1 << 12; // set PWNENA4: enable PWN1.4 flipflop
+	LPC_PWM1->PCR = 1 << 12; // set PWMENA4: enable PWN1.4 flipflop
 
 	LPC_PWM1->PR = 0;
-	LPC_PWM1->MR0 = MAX_BRIGHTNESS_MR;
+	LPC_PWM1->MR0 = BRIGHTNESS_MR_STEP * 4;
 	LPC_PWM1->LER = 0xFF; // enable shadow register copying
 
 	LPC_PWM1->MCR = 1 << 1;				 // reset TC on match event
