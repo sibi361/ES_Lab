@@ -6,6 +6,7 @@
 #define REFERENCE_VOLTAGE 3.300
 #define FULL_SCALE 0xFFF // 12 bit ADC
 
+// LCD connected to CNC
 #define DATA_CTRL 0xF << 15
 #define RS_CTRL 1 << 19
 #define EN_CTRL 1 << 20
